@@ -101,22 +101,5 @@
     </div>
   </div>
 
-  <script>
-    function searchMobiles() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.getElementsByClassName('mobile-card');
-
-      for (let i = 0; i < cards.length; i++) {
-        const name = cards[i].getElementsByClassName('mobile-name')[0].innerText.toLowerCase();
-        const desc = cards[i].getElementsByClassName('mobile-desc')[0].innerText.toLowerCase();
-
-        if (name.includes(input) || desc.includes(input)) {
-          cards[i].style.display = '';
-        } else {
-          cards[i].style.display = 'none';
-        }
-      }
-    }
-  </script>
 </body>
 </html>
