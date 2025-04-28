@@ -1,0 +1,54 @@
+<!-- Starter HTML Structure for Smart Mobile Check-In Prototype -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mobile Check-In</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 400px; margin: auto; text-align: center; }
+        h1, h2 { color: #333; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .map { margin-top: 20px; border: 1px solid #ccc; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container" id="landingPage">
+        <h1>Welcome to [Clinic Name]!</h1>
+        <p>Fast Mobile Check-In</p>
+        <button onclick="goToCheckIn()">Start Check-In</button>
+    </div>
+
+    <div class="container" id="checkInForm" style="display:none;">
+        <h2>Mobile Check-In</h2>
+        <input type="text" placeholder="Mobile Number">
+        <input type="text" placeholder="Name (optional)">
+        <textarea placeholder="Purpose of Visit (e.g., fever, injury, follow-up)"></textarea>
+        <button onclick="goToConfirmation()">Check In</button>
+    </div>
+
+    <div class="container" id="confirmationPage" style="display:none;">
+        <h2>🎉 You're Checked In!</h2>
+        <p>Estimated Wait: <strong>15 mins</strong></p>
+        <p>Go to Waiting Area B ➔</p>
+        <div class="map">
+            <p>You Are Here ➜ Waiting Area B</p>
+        </div>
+        <p>Live Updates: ON</p>
+    </div>
+
+    <script>
+        function goToCheckIn() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('checkInForm').style.display = 'block';
+        }
+        function goToConfirmation() {
+            document.getElementById('checkInForm').style.display = 'none';
+            document.getElementById('confirmationPage').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
