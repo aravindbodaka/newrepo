@@ -1,409 +1,54 @@
+<!-- Starter HTML Structure for Smart Mobile Check-In Prototype -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grocery for Students</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    html, body {
-      scroll-behavior: smooth;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-image: url('https://img.freepik.com/free-photo/front-view-vegetable_140725-103355.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 0;
-    }
-    .content {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .header {
-      font-size: 32px;
-      font-weight: 700;
-      padding: 20px 16px;
-      margin: 40px auto 20px auto;
-      background-color: #6a0dad;
-      color: #ffffff;
-      text-transform: uppercase;
-      box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
-      letter-spacing: 1px;
-      border-radius: 6px;
-      display: inline-block;
-    }
-    .menu {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-    }
-    .menu-item {
-      background-color: orange;
-      color: green;
-      border: 3px solid green;
-      padding: 20px 40px;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 180px;
-      transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
-    }
-    .menu-item:hover {
-      background-color: green;
-      color: white;
-      transform: scale(0.97);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-    }
-    .controls {
-      margin: 10px auto;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    .sort-select, .search-bar {
-      font-size: 16px;
-      padding: 6px;
-      border-radius: 6px;
-      border: 2px solid green;
-    }
-    .scroll-container {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    .section {
-      display: none;
-    }
-    .item {
-      background-color: orange;
-      border: 3px solid green;
-      padding: 10px;
-      color: green;
-      font-weight: bold;
-      margin: 10px;
-      display: inline-block;
-      min-width: 160px;
-      cursor: pointer;
-    }
-    #scrollTopBtn {
-      display: none;
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 99;
-      font-size: 22px;
-      border: none;
-      background-color: #6a0dad;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 50%;
-    }
-    .theme-toggle, .cart-toggle {
-      position: fixed;
-      top: 20px;
-      background-color: #ffffffaa;
-      border: 2px solid #6a0dad;
-      color: #6a0dad;
-      font-size: 16px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 999;
-    }
-    .theme-toggle { right: 120px; }
-    .cart-toggle { right: 20px; }
-    .cart-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 300px;
-      height: 100%;
-      background-color: #fefefe;
-      z-index: 1000;
-      padding: 20px;
-      overflow-y: auto;
-      box-shadow: -3px 0 8px rgba(0,0,0,0.3);
-    }
-    .cart-content ul {
-      list-style: none;
-      padding: 0;
-    }
-    .cart-content li {
-      padding: 8px 0;
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #ccc;
-    }
-    body.dark-mode {
-      background-color: #121212;
-      background-image: none;
-      color: white;
-    }
-    body.dark-mode .header,
-    body.dark-mode .menu-item,
-    body.dark-mode .item,
-    body.dark-mode .sort-select,
-    body.dark-mode .search-bar {
-      background-color: #333;
-      color: #eee;
-      border-color: #999;
-    }
-    body.dark-mode .menu-item:hover,
-    body.dark-mode .item:hover {
-      background-color: #555;
-      color: #fff;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Mobile Check-In</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 400px; margin: auto; text-align: center; }
+        h1, h2 { color: #333; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .map { margin-top: 20px; border: 1px solid #ccc; padding: 20px; }
+    </style>
 </head>
-<body onclick="handleClickOutside(event)">
-  <button class="theme-toggle" onclick="toggleTheme(event)">🌓 Toggle Theme</button>
-  <button class="cart-toggle" onclick="toggleCart(event)">🛒 Cart (<span id="cart-count">0</span>)</button>
-  <div class="overlay"></div>
-  <div class="content">
-    <div class="header">Grocery for Students</div>
-    <div class="menu">
-      <div class="menu-item" onclick="showAllCategories()">Home</div>
-      <div class="menu-item" onclick="showSection('fruits')">Fruits</div>
-      <div class="menu-item" onclick="showSection('vegetables')">Vegetables</div>
+<body>
+    <div class="container" id="landingPage">
+        <h1>Welcome to [Clinic Name]!</h1>
+        <p>Fast Mobile Check-In</p>
+        <button onclick="goToCheckIn()">Start Check-In</button>
     </div>
-    <div class="controls">
-      <input type="text" class="search-bar" placeholder="Search" oninput="filterItems(this.value)" />
-      <select class="sort-select" onchange="sortItems('fruits', this.value); sortItems('vegetables', this.value)">
-        <option value="asc">Sort A-Z</option>
-        <option value="desc">Sort Z-A</option>
-      </select>
-    </div>
-    <div class="scroll-container">
-      <div id="fruits" class="section" style="display:block">
-        <div class="item" onclick="addToCart('Apple')">Apple</div>
-        <div class="item" onclick="addToCart('Avocado')">Avocado</div>
-        <div class="item" onclick="addToCart('Banana')">Banana</div>
-        <div class="item" onclick="addToCart('Blueberry')">Blueberry</div>
-        <div class="item" onclick="addToCart('Cherries')">Cherries</div>
-        <div class="item" onclick="addToCart('Grapes')">Grapes</div>
-        <div class="item" onclick="addToCart('Guava')">Guava</div>
-        <div class="item" onclick="addToCart('Kiwi')">Kiwi</div>
-        <div class="item" onclick="addToCart('Lychee')">Lychee</div>
-        <div class="item" onclick="addToCart('Mango')">Mango</div>
-        <div class="item" onclick="addToCart('Orange')">Orange</div>
-        <div class="item" onclick="addToCart('Papaya')">Papaya</div>
-        <div class="item" onclick="addToCart('Peach')">Peach</div>
-        <div class="item" onclick="addToCart('Pineapple')">Pineapple</div>
-        <div class="item" onclick="addToCart('Plum')">Plum</div>
-        <div class="item" onclick="addToCart('Raspberry')">Raspberry</div>
-        <div class="item" onclick="addToCart('Strawberry')">Strawberry</div>
-        <div class="item" onclick="addToCart('Watermelon')">Watermelon</div>
-      </div>
-      <div id="vegetables" class="section">
-        <div class="item" onclick="addToCart('Beetroot')">Beetroot</div>
-        <div class="item" onclick="addToCart('Bell Pepper')">Bell Pepper</div>
-        <div class="item" onclick="addToCart('Broccoli')">Broccoli</div>
-        <div class="item" onclick="addToCart('Cabbage')">Cabbage</div>
-        <div class="item" onclick="addToCart('Carrot')">Carrot</div>
-        <div class="item" onclick="addToCart('Cauliflower')">Cauliflower</div>
-        <div class="item" onclick="addToCart('Cucumber')">Cucumber</div>
-        <div class="item" onclick="addToCart('Eggplant')">Eggplant</div>
-        <div class="item" onclick="addToCart('Green Beans')">Green Beans</div>
-        <div class="item" onclick="addToCart('Okra')">Okra</div>
-        <div class="item" onclick="addToCart('Onion')">Onion</div>
-        <div class="item" onclick="addToCart('Peas')">Peas</div>
-        <div class="item" onclick="addToCart('Potato')">Potato</div>
-        <div class="item" onclick="addToCart('Radish')">Radish</div>
-        <div class="item" onclick="addToCart('Spinach')">Spinach</div>
-        <div class="item" onclick="addToCart('Sweet Corn')">Sweet Corn</div>
-        <div class="item" onclick="addToCart('Tomato')">Tomato</div>
-        <div class="item" onclick="addToCart('Zucchini')">Zucchini</div>
-        <div id="no-results" style="color:white; font-weight:bold; display:none; margin-top:20px;">No results found.</div>
-      </div>
-    </div>
-  </div>
-  <div class="cart-overlay" id="cart-overlay">
-    <div class="cart-content">
-      <h2>Shopping Cart</h2>
-      <ul id="cart-items"></ul>
-      <button onclick="clearCart()">Clear Cart</button>
-    </div>
-  </div>
-  <button onclick="scrollToTop()" id="scrollTopBtn">⬆</button>
-<script>
-let cart = [];
-function addToCart(itemName) {
-  cart.push(itemName);
-  updateCartDisplay();
-}
-function updateCartDisplay() {
-  const cartList = document.getElementById("cart-items");
-  const cartCount = document.getElementById("cart-count");
-  cartList.innerHTML = '';
 
-  // Group cart items
-  const itemMap = {};
-  cart.forEach(item => {
-    itemMap[item] = (itemMap[item] || 0) + 1;
-  });
-  cartCount.textContent = cart.length;
-  Object.entries(itemMap).forEach(([item, quantity]) => {
-    const li = document.createElement("li");
-    li.textContent = `${item}  x${quantity}`;
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "Remove";
-    removeBtn.onclick = function(e) {
-      e.stopPropagation();
-      cart = cart.filter((_, i, arr) => {
-        const index = arr.indexOf(item);
-        if (index !== -1) {
-          arr.splice(index, 1);
+    <div class="container" id="checkInForm" style="display:none;">
+        <h2>Mobile Check-In</h2>
+        <input type="text" placeholder="Mobile Number">
+        <input type="text" placeholder="Name (optional)">
+        <textarea placeholder="Purpose of Visit (e.g., fever, injury, follow-up)"></textarea>
+        <button onclick="goToConfirmation()">Check In</button>
+    </div>
+
+    <div class="container" id="confirmationPage" style="display:none;">
+        <h2>🎉 You're Checked In!</h2>
+        <p>Estimated Wait: <strong>15 mins</strong></p>
+        <p>Go to Waiting Area B ➔</p>
+        <div class="map">
+            <p>You Are Here ➜ Waiting Area B</p>
+        </div>
+        <p>Live Updates: ON</p>
+    </div>
+
+    <script>
+        function goToCheckIn() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('checkInForm').style.display = 'block';
         }
-        return false;
-      });
-      updateCartDisplay();
-    };
-    li.appendChild(removeBtn);
-    cartList.appendChild(li);
-  });
-}
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  updateCartDisplay();
-}
-function clearCart() {
-  cart = [];
-  updateCartDisplay();
-}
-function toggleCart(event) {
-  event.stopPropagation();
-  const overlay = document.getElementById("cart-overlay");
-  overlay.style.display = overlay.style.display === "block" ? "none" : "block";
-}
-function handleClickOutside(event) {
-  const overlay = document.getElementById("cart-overlay");
-  const cartBtn = document.querySelector('.cart-toggle');
-  if (
-    overlay.style.display === 'block' &&
-    !overlay.contains(event.target) &&
-    !cartBtn.contains(event.target)
-  ) {
-    overlay.style.display = 'none';
-  }
-}
-function toggleTheme(event) {
-  event.stopPropagation();
-  document.body.classList.toggle('dark-mode');
-}
-function showSection(id) {
-  document.getElementById('fruits').style.display = 'none';
-  document.getElementById('vegetables').style.display = 'none';
-  document.getElementById(id).style.display = 'block';
-}
-function showAllCategories() {
-  document.getElementById('fruits').style.display = 'block';
-  document.getElementById('vegetables').style.display = 'block';
-}
-function filterItems(query) {
-  const fruits = document.getElementById('fruits');
-  const vegetables = document.getElementById('vegetables');
-  const noResults = document.getElementById('no-results');
-  const fruitItems = Array.from(fruits.getElementsByClassName('item'));
-  const vegetableItems = Array.from(vegetables.getElementsByClassName('item'));
-  let matchCount = 0;
-
-  if (query.trim() === '') {
-    // Default to Home view (showAllCategories)
-    showAllCategories();
-    fruitItems.forEach(item => item.style.display = 'inline-block');
-    vegetableItems.forEach(item => item.style.display = 'inline-block');
-    noResults.style.display = 'none';
-    return;
-  }
-
-  fruits.style.display = 'block';
-  vegetables.style.display = 'block';
-  fruitItems.forEach(item => {
-    const match = item.textContent.toLowerCase().includes(query.toLowerCase());
-    item.style.display = match ? 'inline-block' : 'none';
-    if (match) matchCount++;
-  });
-  vegetableItems.forEach(item => {
-    const match = item.textContent.toLowerCase().includes(query.toLowerCase());
-    item.style.display = match ? 'inline-block' : 'none';
-    if (match) matchCount++;
-  });
-  noResults.style.display = matchCount === 0 ? 'block' : 'none';
-}
-function sortItems(id, direction) {
-  const section = document.getElementById(id);
-  const items = Array.from(section.getElementsByClassName('item'));
-  items.sort((a, b) => {
-    return direction === 'asc'
-      ? a.textContent.localeCompare(b.textContent)
-      : b.textContent.localeCompare(a.textContent);
-  });
-  items.forEach(item => section.appendChild(item));
-}
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-window.onscroll = function () {
-  document.getElementById("scrollTopBtn").style.display = window.scrollY > 200 ? "block" : "none";
-};
-</script>
-<div id="popup" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 2px solid green; padding: 20px; border-radius: 10px; display: none; z-index: 2000; text-align: center;">
-  <p id="popup-item-name"></p>
-  <div>
-    <button onclick="decrementQuantity()">-</button>
-    <span id="item-quantity">1</span>
-    <button onclick="incrementQuantity()">+</button>
-  </div>
-  <br/>
-  <button onclick="confirmAddToCart()">Add to Cart</button>
-</div>
-
-<script>
-let popupItemName = '';
-let currentQuantity = 1;
-function addToCart(itemName) {
-  popupItemName = itemName;
-  currentQuantity = 1;
-  document.getElementById('popup-item-name').textContent = `Add ${itemName}`;
-  document.getElementById('item-quantity').textContent = currentQuantity;
-  document.getElementById('popup').style.display = 'block';
-}
-function incrementQuantity() {
-  currentQuantity++;
-  document.getElementById('item-quantity').textContent = currentQuantity;
-}
-function decrementQuantity() {
-  if (currentQuantity > 1) currentQuantity--;
-  document.getElementById('item-quantity').textContent = currentQuantity;
-}
-function confirmAddToCart() {
-  for (let i = 0; i < currentQuantity; i++) {
-    cart.push(popupItemName);
-  }
-  updateCartDisplay();
-  document.getElementById('popup').style.display = 'none';
-}
-</script>
+        function goToConfirmation() {
+            document.getElementById('checkInForm').style.display = 'none';
+            document.getElementById('confirmationPage').style.display = 'block';
+        }
+    </script>
 </body>
 </html>
