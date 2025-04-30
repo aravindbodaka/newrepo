@@ -1,53 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Mobile Check-In</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 400px; margin: auto; text-align: center; }
-        h1, h2 { color: #333; }
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        .map { margin-top: 20px; border: 1px solid #ccc; padding: 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Mobile Check-In</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://logos-world.net/wp-content/uploads/2023/11/Cleveland-Clinic-Symbol.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .overlay {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.65));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    input, textarea, select, button {
+      width: 85%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #errorMsg {
+      color: red;
+      display: none;
+    }
+    #waitLabel {
+      font-weight: bold;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @media only screen and (max-device-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+  input, textarea, select, button {
+    width: 90%;
+      font-size: 16px;
+    }
+    h1, h2 {
+      font-size: 1.5em;
+    }
+    label {
+      font-size: 0.95em;
+    }
+  }
+  @media (min-width: 1024px) and (orientation: landscape) {
+    .container {
+      max-width: 700px;
+      padding: 30px;
+    }
+    h1, h2 {
+      font-size: 2em;
+    }
+    input, textarea, select, button {
+      font-size: 18px;
+    }
+  }
+</style>
 </head>
 <body>
+  <div class="overlay">
     <div class="container" id="landingPage">
-        <h1>Welcome to [Clinic Name]!</h1>
-        <p>Fast Mobile Check-In</p>
-        <button onclick="goToCheckIn()">Start Check-In</button>
+      <h1>Welcome to Cleveland Clinic</h1>
+      <p>Fast Mobile Check-In</p>
+      <button onclick="goToCheckIn()">Start Check-In</button>
     </div>
 
     <div class="container" id="checkInForm" style="display:none;">
-        <h2>Mobile Check-In</h2>
-        <input type="text" placeholder="Mobile Number">
-        <input type="text" placeholder="Name (optional)">
-        <textarea placeholder="Purpose of Visit (e.g., fever, injury, follow-up)"></textarea>
-        <button onclick="goToConfirmation()">Check In</button>
+      <h2>Mobile Check-In</h2>
+      <label for="firstName">👤 First Name</label>
+      <input id="firstName" type="text">
+      <label for="lastName">👤 Last Name</label>
+      <input id="lastName" type="text">
+      <label for="mobile">📱 Mobile Number</label>
+      <input id="mobile" type="tel">
+      <label for="email">✉️ Email (optional)</label>
+      <input id="email" type="email">
+      <label for="purposeSelect">📝 Purpose of Visit</label>
+      <select id="purposeSelect" onchange="toggleOtherPurpose()">
+        <option value="">--Select Purpose--</option>
+        <option value="Fever">Fever</option>
+        <option value="Injury">Injury</option>
+        <option value="Cold/Cough">Cold/Cough</option>
+        <option value="Follow-up">Previous Follow-Up</option>
+        <option value="Other">Other</option>
+      </select>
+      <textarea id="otherPurpose" placeholder="Please describe" style="height: 40px; width: 75%; display: none;"></textarea>
+      <p id="errorMsg">Please fill all required fields.</p>
+      <button onclick="goToConfirmation()">Check In</button>
+      <div id="spinner" style="display:none; margin-top: 10px;">
+        <svg width="30" height="30" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" stroke="#007BFF">
+          <g fill="none" fill-rule="evenodd" stroke-width="2">
+            <circle cx="22" cy="22" r="1">
+              <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" repeatCount="indefinite" />
+              <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" repeatCount="indefinite" />
+            </circle>
+            <circle cx="22" cy="22" r="1">
+              <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" repeatCount="indefinite" />
+              <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" repeatCount="indefinite" />
+            </circle>
+          </g>
+        </svg>
+      </div>
     </div>
 
     <div class="container" id="confirmationPage" style="display:none;">
-        <h2>🎉 You're Checked In!</h2>
-        <p>Estimated Wait: <strong>15 mins</strong></p>
-        <p>Go to Waiting Area B ➔</p>
-        <div class="map">
-            <p>You Are Here ➜ Waiting Area B</p>
-        </div>
-        <p>Live Updates: ON</p>
+      <h2>🎉 You're Checked In!</h2>
+      <div id="visitorDetails"></div>
+      <p>Estimated Wait: <strong>15 mins</strong></p>
+      <p>Go to Waiting Area B ➔</p>
+      <div class="map">
+        <p>You Are Here ➜ Waiting Area B</p>
+      </div>
+      <button onclick="document.getElementById('landingPage').style.display = 'none'; document.getElementById('checkInForm').style.display = 'none'; document.getElementById('confirmationPage').style.display = 'none'; document.getElementById('statusPage').style.display = 'block';">Show Status</button>
     </div>
 
-    <script>
-        function goToCheckIn() {
-            document.getElementById('landingPage').style.display = 'none';
-            document.getElementById('checkInForm').style.display = 'block';
-        }
-        function goToConfirmation() {
-            document.getElementById('checkInForm').style.display = 'none';
-            document.getElementById('confirmationPage').style.display = 'block';
-        }
-    </script>
+    <div class="container" id="statusPage" style="display:none;">
+      <h2>Live Wait Status</h2>
+      <progress id="waitProgress" value="0" max="100"></progress>
+      <p id="waitLabel">Estimated Wait Time Updating...</p>
+    </div>
+  </div>
+
+  <audio id="dingSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    function goToCheckIn() {
+      document.getElementById('landingPage').style.display = 'none';
+      document.getElementById('checkInForm').style.display = 'block';
+    }
+
+    function toggleOtherPurpose() {
+      const purposeSelect = document.getElementById('purposeSelect');
+      document.getElementById('otherPurpose').style.display = purposeSelect.value === 'Other' ? 'block' : 'none';
+    }
+
+    function goToConfirmation() {
+      document.getElementById('spinner').style.display = 'block';
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const purposeSelect = document.getElementById('purposeSelect');
+      const otherPurpose = document.getElementById('otherPurpose').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (!firstName || !lastName || !mobile || !purposeSelect.value) {
+        errorMsg.style.display = 'block';
+        document.getElementById('spinner').style.display = 'none';
+        return;
+      }
+
+      errorMsg.style.display = 'none';
+      const purpose = purposeSelect.value === 'Other' ? otherPurpose : purposeSelect.value;
+      const visitorDetails = document.getElementById('visitorDetails');
+      visitorDetails.innerHTML = `<p><strong>Name:</strong> ${firstName} ${lastName}</p>
+                                  <p><strong>Mobile:</strong> ${mobile}</p>
+                                  <p><strong>Email:</strong> ${email || 'N/A'}</p>
+                                  <p><strong>Purpose:</strong> ${purpose || 'N/A'}</p>`;
+
+      setTimeout(() => {
+        document.getElementById('checkInForm').style.display = 'none';
+        document.getElementById('confirmationPage').style.display = 'block';
+        document.getElementById('spinner').style.display = 'none';
+      }, 1000);
+    }
+
+    let waitValue = 0;
+    const waitBar = document.getElementById('waitProgress');
+    const waitLabel = document.getElementById('waitLabel');
+
+    function updateWaitTime() {
+      if (waitValue >= 100) {
+        waitLabel.textContent = '✅ Visit your Doctor';
+        waitLabel.style.fontWeight = 'bold';
+        waitLabel.style.fontSize = '18px';
+        waitLabel.style.color = '#2e7d32';
+        waitLabel.style.animation = 'pulse 1s ease-in-out infinite';
+        document.getElementById('dingSound').play();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        return;
+      }
+      waitValue += 10;
+      waitBar.value = waitValue;
+      const totalMinutes = 15;
+      const remaining = Math.max(0, Math.round((totalMinutes * (100 - waitValue)) / 100));
+      waitLabel.textContent = `Estimated Wait Time: ~${remaining} min(s)`;
+      setTimeout(updateWaitTime, 1000);
+    }
+
+    const observer = new MutationObserver(() => {
+      if (document.getElementById('statusPage').style.display === 'block') {
+        waitValue = 0;
+        waitBar.value = 0;
+        waitLabel.textContent = 'Estimated Wait Time Updating...';
+        updateWaitTime();
+      }
+    });
+
+    observer.observe(document.getElementById('statusPage'), { attributes: true, attributeFilter: ['style'] });
+  </script>
 </body>
 </html>
